@@ -22,10 +22,10 @@ public class Student{
     int id;
     String name,department,university;
     double cgpa;
-    double[][] gpa;  // First index used for Year & 2nd in for Semester Ex : gpa[1][2] (first year 2nd semester) 
+    double[][] gpa;  // 1st index for Year & 2nd in for Semester 
     String[] subjects;
-    double[][][] credits; //First index for year 2nd is for semester & 3rd is for Subject number
-    double[][][] grades; //First index for year 2nd is for semester & 3rd is for Subject number
+    double[][][] credits; //1st index for year 2nd is for semester & 3rd is for Subject number
+    double[][][] grades; //1st index for year 2nd is for semester & 3rd is for Subject number
     
     
     
@@ -35,20 +35,20 @@ public class Student{
      */
     public Student(){
         // initialise   variables with defult values
-    	id = 0;
-    	name = null;
-    	department = null;
-    	university = null;
-    	gpa = new double[5][5];
-    	credits = new double[8][8][10];
-    	grades = new double[8][8][10];
+    	id = 0;//default initialization
+    	name = null;//default initialization
+    	department = null;//default initialization
+    	university = null;//default initialization
+    	gpa = new double[5][5];//default initialization
+    	credits = new double[8][8][10];//default initialization
+    	grades = new double[8][8][10];//default initialization
         
     }
     /**
      * Define a method to print the students details.
      */
     
-    public void studentDetailsById(){
+    public void studentDetailsById(int iD){
         //write your code here
     	System.out.println("ID : "+id);
     	System.out.println("Name : "+name);
@@ -76,7 +76,7 @@ public class Student{
      * Define a method to compute the CGPA from the Given term GPA for a particular student.
      * se as many arguments as required.
      */
-    public double computeCGPAByID(){
+    public double computeCGPAByID(int iD){
         // Write your code here
     	
     	for(int i=1;i<=8;i++)
@@ -135,8 +135,8 @@ public class Student{
     		student[i] = new Student(); //Memory allocation for nth student
     	
 				student[i].updateStudentById(iD);
-				student[i].studentDetailsById();
-				cgpa = student[i].computeCGPAByID();
+				student[i].studentDetailsById(iD);
+				cgpa = student[i].computeCGPAByID(iD);
 				System.out.println("CGPA is : "+cgpa);
 		
 		}

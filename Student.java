@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
 /**
  * This is a class to define the necessary attributes and methods to conceptualize a "Student"
@@ -11,21 +13,14 @@ import java.util.Scanner;
 
 public class Student{
 	static Scanner input = new Scanner(System.in);  //Use for Scan data from user
-    // Declare the important attributes of a student. For example:
-    //1.Id
-    //2. Name
-    //3. Department
-    //4. University
-    //5. GPAs in various terms (Multidimensional arrays)
-    //6. subjects for Current terms
-    //7. Credits and grades of Current Terms (Multidimmentional Array)
     int id;
     String name,department,university;
     double cgpa;
-    double[][] gpa;  // 1st index for Year & 2nd in for Semester 
+    double gpa;
     String[] subjects;
-    double[][][] credits; //1st index for year 2nd is for semester & 3rd is for Subject number
-    double[][][] grades; //1st index for year 2nd is for semester & 3rd is for Subject number
+    double[][] GPA;  // First index used for Year & 2nd in for Semester Ex : gpa[1][2] (first year 2nd semester) 
+    double[][][] credits; //First index for year 2nd is for semester & 3rd is for Subject number
+    double[][][] grades; //First index for year 2nd is for semester & 3rd is for Subject number
     
     
     
@@ -35,20 +30,21 @@ public class Student{
      */
     public Student(){
         // initialise   variables with defult values
-    	id = 0;//default initialization
-    	name = null;//default initialization
-    	department = null;//default initialization
-    	university = null;//default initialization
-    	gpa = new double[5][5];//default initialization
-    	credits = new double[8][8][10];//default initialization
-    	grades = new double[8][8][10];//default initialization
+    	id = 0;
+    	name = null;
+    	department = null;
+    	university = null;
+    	GPA = new double[4][2];
+    	subjects=new String[10];
+    	credits = new double[4][2][5];
+    	grades = new double[4][2][5];
         
     }
     /**
      * Define a method to print the students details.
      */
     
-    public void studentDetailsById(int iD){
+    public void studentDetailsById(int id){
         //write your code here
     	System.out.println("ID : "+id);
     	System.out.println("Name : "+name);
@@ -65,35 +61,56 @@ public class Student{
     	this.id = id;
     	input.nextLine();
     	System.out.print("Enter name : ");
-    	name = input.nextLine();
+        name = input.nextLine();
     	System.out.print("Enter University name : ");
     	university = input.nextLine();
     	System.out.print("Enter Department name : ");
-    	department = input.nextLine();   	 
+    	department = input.nextLine(); 
+    	for(int i=0;i<8;i++)
+    	{
+    	    System.out.println("enter gpa of" +(i+1)+"semister:");
+    	    gpa=gpa+input.nextDouble();
+    	}
+   
     }
     
     /**
      * Define a method to compute the CGPA from the Given term GPA for a particular student.
      * se as many arguments as required.
      */
-    public double computeCGPAByID(int iD){
-        // Write your code here
-    	
-    	for(int i=1;i<=8;i++)
-    	{
-    		System.out.println("Enter GPA of Sem " + (i) +" :  ");
-    		cgpa += input.nextDouble();
-    	}
-    	
-    	return cgpa/8;
+    public double computeCGPAByID(int id)
+    {
+        double cgpa;
+        cgpa=gpa/8.0;
+        System.out.println(cgpa);
+        return cgpa;
     }
     
     /**
      * Define a method to compute the GPA from the given Credits and Grades of all the subjects
      */
-    public double computeGPAById()
+    public double computeGPAById(int id)
     {
-        //write yor code here
+        double result=0;
+        double total=0;
+        double gpa=0;
+        for(int i=0;i<4;i++)
+        {
+            for(int j=0;j<8;j++)
+            {
+                for(int k=0;k<10;k++)
+                {
+                    System.out.print("enter credits and grades of"+ (i+1)+" year and"+(j+1)+" semister and"+(k+1)+"subjects:");
+                    credits[i][j][k]=input.nextDouble();
+                    total+=credits[i][j][k];
+
+                    grades[i][j][k]=input.nextDouble();
+                    result+=credits[i][j][k]*grades[i][j][k];
+                }
+                GPA[i][j]=result/total;
+                System.out.println(GPA[i][j]);
+            }
+        }
         return 0.0;
     }
     
@@ -104,17 +121,25 @@ public class Student{
      */
    public void saveStudents()
     {
-        //Write your code here
+        try
+        {
+            File outputFile = new File ("out.txt");
+            PrintWriter writer = new PrintWriter (outputFile);
+            
+            writer.println ("Name : " + name);
+            writer.println ("ID : " + id);
+            writer.println ("Deptartment : " + department);
+            writer.println ("university : " + university);
+            writer.println ("Current CGPA : " + cgpa);
+            writer.println ("Current GPA : "+gpa);
+            writer.close();
+        }
+        catch (Exception e)
+        {
+            System.out.print (e);
+        }
     }
     
-    /**
-     * Create a dummy files with infromations to describe the properties of a Student object and load the data files using Java File and Scanner class.
-     * use as many arguments as required.
-     */
-    public void loadStudents(){
-        //Write your code here
-        
-    }
     
     /**
      * The tasks to be carried out here:
@@ -123,7 +148,7 @@ public class Student{
      */
     public static void main(String[] args){
     	int n,iD;
-    	double cgpa;
+    	double cg;
     	
     	System.out.print("How many Students ? ");
     	n = input.nextInt();
@@ -132,13 +157,15 @@ public class Student{
     		System.out.println("-----Update Student " + i+1 +" Information");
     		System.out.print("Enter ID no : ");
     		iD = input.nextInt();
-    		student[i] = new Student(); //Memory allocation for nth student
+    		student[i] = new Student(); //Memory allocation for nth stud
     	
 				student[i].updateStudentById(iD);
 				student[i].studentDetailsById(iD);
-				cgpa = student[i].computeCGPAByID(iD);
-				System.out.println("CGPA is : "+cgpa);
-		
-		}
+				student[i].computeCGPAByID(iD);
+				cg = student[i].computeCGPAByID(iD);
+			    System.out.println("CGPA:"+cg);
+			    student[i].saveStudents();
+
     }
+}
 }
